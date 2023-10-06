@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <title>Rock Paper Scissors</title>
+</head>
+<body>
+  <h1 id="outcome-message">New round has started. Select your move.</h1>
+  <div id="game-state"></div>
+
+  <div class="button-group left">
+    <h2 id="player-number"></h2>
+    <button id="rock" class="rock" >Rock</button>
+    <button id="paper" class="paper" >Paper</button>
+    <button id="scissor" class="scissor" >Scissor</button>
+  </div>
+
+
+  <script>
+    const IP_ADDRESS = '192.168.0.226'; // Replace with your desired IP address
+    const PORT = 8080;
+
+    // Conexión WebSocket con el backend
+    const ws = new WebSocket(`ws://${IP_ADDRESS}:${PORT}`);
+
+    // Manejar la apertura de la conexión WebSocket
+    function isOpen(ws) { return ws.readyState === ws.OPEN }
+
+    ws.addEventListener('open', (event) => {
+        console.log('Conexión WebSocket abierta');
+    });
+
+    function updateGameState(gamestate) {
+        const outcomeDiv = document.getElementById('outcome-message');
+      
+        // Update the content of the div with the outcome message
+        outcomeDiv.textContent = gamestate;
+    };
+
+    function displayPlayerNumber(playerNumber) {
+        const playerNumberDiv = document.getElementById('player-number');
+
+        playerNumberDiv.textContent = playerNumber;
+    };
+
+
+    // Manejar el evento de cierre del WebSocket
+    ws.addEventListener('close', (event) => {
+        if (event.wasClean) {
+            console.log(`Conexión WebSocket cerrada de manera limpia, código: ${event.code}, razón: ${event.reason}`);
+        } else {
+            console.error(`Conexión WebSocket cerrada de manera inesperada`);
+        }
+    });
+
+    // Add click event listeners to the buttons for Player 1
+    const rockButton = document.getElementById('rock');
+    const paperButton = document.getElementById('paper');
+    const scissorButton = document.getElementById('scissor');
+
+    rockButton.addEventListener('click', () => {
+        // Send an "Rock" message for Player 1 to the server
+        if (ws.readyState === ws.OPEN) {
+            ws.send('Rock');
+        }
+    });
+
+    paperButton.addEventListener('click', () => {
+        // Send a "Paper" message for Player 1 to the server
+        if (ws.readyState === ws.OPEN) {
+            ws.send('Paper');
+        }
+    });
+
+    scissorButton.addEventListener('click', () => {
+        // Send a "Scissor" message for Player 1 to the server
+        if (ws.readyState === ws.OPEN) {
+            ws.send('Scissor');
+        }
+    });
+
+    ws.onmessage = function (event) {
+        const message = JSON.parse(event.data);
+
+        if (message.type === "PLAYER_NUMBER") {
+          // Handle player number message
+          // Display it in a separate div
+          displayPlayerNumber(message.content);
+        } else if (message.type === "GAME_STATE") {
+          // Handle game state message
+          // Update the game state on the client
+          updateGameState(message.content);
+        }
+      };
+
+  </script>
+</body>
+</html>

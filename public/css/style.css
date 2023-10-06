@@ -1,0 +1,75 @@
+/* styles.css */
+body {
+    background-color: lightgrey;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Center the outcome message div */
+#outcome-message {
+    text-align: center;
+}
+
+/* Center the player name and game state div */
+#player-number, #game-state {
+    text-align: center;
+}
+
+/* Apply basic styling to buttons */
+button {
+    cursor: pointer;
+    font-weight: bold;
+    margin: 5px;
+    width: 100px; /* Set a fixed width for all buttons */
+    height: 40px; /* Set a fixed height for all buttons */
+}
+
+/* Style buttons for rock */
+.rock {
+    background-color: #ff5733;
+    color: #fff;
+    padding: 10px; /* Add padding for the inner text */
+    box-sizing: border-box; /* Include padding in the button's width and height */
+}
+
+/* Style buttons for paper */
+.paper {
+    background-color: #33aaff;
+    color: #fff;
+    padding: 10px; /* Add padding for the inner text */
+    box-sizing: border-box; /* Include padding in the button's width and height */
+}
+
+/* Style buttons for scissor */
+.scissor {
+    background-color: #33ff33;
+    color: #000;
+    padding: 10px; /* Add padding for the inner text */
+    box-sizing: border-box; /* Include padding in the button's width and height */
+}
+
+/* Center button groups and stack them */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Adjust spacing between button groups */
+.left {
+    margin-right: 0;
+}
+
+.right {
+    margin-left: 0;
+}
+
+/* Add an outline when the button is focused */
+button:focus {
+    outline: 2px solid blue; /* Change the outline color and width as desired */
+}
