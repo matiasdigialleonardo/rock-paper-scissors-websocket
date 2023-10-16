@@ -1,4 +1,8 @@
 /* styles.css */
+* {
+    font-family: "Poppins";
+}
+
 body {
     background-color: lightgrey;
     display: flex;
@@ -26,30 +30,28 @@ button {
     margin: 5px;
     width: 100px; /* Set a fixed width for all buttons */
     height: 40px; /* Set a fixed height for all buttons */
+    border-radius: 50px;
+    font-size: 15px;
+    border: 1px solid #333;
 }
 
 /* Style buttons for rock */
-.rock {
+.rock, .paper, .scissor {
     background-color: #ff5733;
-    color: #fff;
-    padding: 10px; /* Add padding for the inner text */
+    color: #eee;
+    padding: 5px; /* Add padding for the inner text */
     box-sizing: border-box; /* Include padding in the button's width and height */
+    box-shadow: 5px 5px 10px #555;
 }
 
 /* Style buttons for paper */
 .paper {
     background-color: #33aaff;
-    color: #fff;
-    padding: 10px; /* Add padding for the inner text */
-    box-sizing: border-box; /* Include padding in the button's width and height */
 }
 
 /* Style buttons for scissor */
 .scissor {
-    background-color: #33ff33;
-    color: #000;
-    padding: 10px; /* Add padding for the inner text */
-    box-sizing: border-box; /* Include padding in the button's width and height */
+    background-color: #33cc33;
 }
 
 /* Center button groups and stack them */
@@ -58,6 +60,7 @@ button {
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
+    gap: 25px;
 }
 
 /* Adjust spacing between button groups */
@@ -71,5 +74,8 @@ button {
 
 /* Add an outline when the button is focused */
 button:focus {
-    outline: 2px solid blue; /* Change the outline color and width as desired */
+    transition: .3s ease-in-out;
+    scale: 1.1;
+    color: #000;
+    border: 1px solid #990; /* Change the outline color and width as desired */
 }
