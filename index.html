@@ -83,13 +83,14 @@
         const message = JSON.parse(event.data);
 
         if (message.type === "PLAYER_NUMBER") {
-          // Handle player number message
-          // Display it in a separate div
-          displayPlayerNumber(message.content);
+			// Handle player number message
+			displayPlayerNumber(message.content);
         } else if (message.type === "GAME_STATE") {
-          // Handle game state message
-          // Update the game state on the client
-          updateGameState(message.content);
+			// Update the game state on the client
+			updateGameState(message.content);
+        } else if (message.type === "FULL-ROOM") {
+            // Update the game state on the client
+            updateGameState(message.content);
         }
       };
 

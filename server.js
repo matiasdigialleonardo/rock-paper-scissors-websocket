@@ -11,7 +11,6 @@ const MAX_PLAYERS = 2; // Set the maximum number of players
 const players = new Map();
 const playerMoves = new Map();
 
-let currentTurn = 1; // Player 1 starts
 let gameState = 'making-move'; // Initial state is waiting for players to make moves
 
 let nextAvailableRole = 'Player 1';
@@ -22,19 +21,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(express.static(__dirname + '/public'));
-       
-// Function to send a message to all clients in the websocket server
-function sendPlayerNumberToClients(wss, playerNumber) {
-    // Iterate over the connected clients
-    wss.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        // Send a message with the player number and message type "PLAYER_NUMBER"
-
-        client.send(JSON.stringify({ type: "PLAYER_NUMBER", content: `Player ${playerNumber}` }));
-      }
-    });
-  }
-  
+         
 function sendGameStateToClients(wss, gameState) {
     // Iterate over the connected clients
     wss.clients.forEach((client) => {
@@ -49,12 +36,12 @@ wss.on('connection', (ws) => {
 
     if (players.size >= MAX_PLAYERS) {
         // Reject the connection if the maximum number of players is reached
-        ws.send('Server: Maximum number of players reached. Try again later.');
+        ws.send(JSON.stringify({ type: 'FULL-ROOM', content: "Maximum number of players reached. Come back later." }));
         ws.close();
         return;
     }
 
-    const playerRole = nextAvailableRole;
+    const playerRole = nextAvailableRole
     nextAvailableRole = nextAvailableRole === 'Player 1' ? 'Player 2' : 'Player 1';
 
     // Store player data in the Map
@@ -66,10 +53,12 @@ wss.on('connection', (ws) => {
 
     ws.send(JSON.stringify({ type: 'PLAYER_NUMBER', content: player.role }));
 
+    // Loggin player connection
     console.log(`Player ${player.role} connected`);
     console.log("Total players: ", players.size)
 
     ws.on('message', (message) => {
+        // Converts the message received from the server to a string to handle game logic
         const messageString = message.toString('utf8');
 
         const playerData = players.get(ws);
@@ -85,12 +74,6 @@ wss.on('connection', (ws) => {
             if (gameState === 'making-move') {
                 playerMoves.set(playerNumber, messageString);
                 console.log(playerMoves)
-
-            // Store the player's move in the map
-            playerMoves.set(playerNumber, messageString);
-
-            // Switch turns
-            currentTurn = currentTurn === 1 ? 2 : 1;
 
             // Check if both players have made their moves
                 if (playerMoves.has(1) && playerMoves.has(2)) {
@@ -116,7 +99,6 @@ wss.on('connection', (ws) => {
 
                     sendGameStateToClients(wss, outcomeMessage)
 
-
                     gameState = 'waiting';
                     
                     if (ws.readyState === ws.OPEN) {
@@ -125,13 +107,12 @@ wss.on('connection', (ws) => {
 
                     setTimeout(() => {
                         playerMoves.clear();
-                        gameState = 'making-move'; // Transition back to 'making-move'
+                        gameState = 'making-move'; // Transition game state back to 'making-move'
                         outcomeMessage = 'New round has started. Select your move.';
                         sendGameStateToClients(wss, outcomeMessage);
 
                         console.log('New round has started.'); // Add a log message for clarity
 
-                        // You can add any additional logic for starting a new round here
                     }, 5000); // Adjust the delay time as needed
             
                 }  
